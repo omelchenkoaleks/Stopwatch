@@ -20,6 +20,12 @@ public class StopwatchActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stopwatch);
 
+        // восстанавливаем состояние активности по значениям, прочитанным из Bundle
+        if (savedInstanceState != null) {
+            seconds = savedInstanceState.getInt("seconds");
+            running = savedInstanceState.getBoolean("running");
+        }
+
         runTimer();
     }
 
@@ -36,6 +42,13 @@ public class StopwatchActivity extends Activity {
         running = false;
         // обнуляем секундомер
         seconds = 0;
+    }
+
+    // метод для сохранения значений переменных для их будущего востановления вместе с активностью
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putInt("seconds", seconds);
+        savedInstanceState.putBoolean("running", running);
     }
 
     // чтобы обновить секундомер планируем многократное выполнение кода с использованием Handler
