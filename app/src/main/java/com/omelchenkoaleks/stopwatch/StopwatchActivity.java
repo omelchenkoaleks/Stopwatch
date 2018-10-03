@@ -55,19 +55,19 @@ public class StopwatchActivity extends Activity {
         savedInstanceState.putBoolean("wasRunning", wasRunning);
     }
 
-    // благодаря этому переопределению метода секундомер сделает паузу, пока активность будет невидима
+    // если активность приостанавливается, остановить отсчет времени
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
         // сохраняем информацию о том, работал ли секундомер на момент вызова метода onStop()
         wasRunning = running;
         running = false;
     }
 
-    // реализуем в этом методе продолжение работы секундомера, как только активность станет снова видима
+    // если активность возобновляет работу, снова запустить отсчет времени, если он происходил до этого
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
         if (wasRunning) {
             running = true;
         }
