@@ -14,6 +14,8 @@ public class StopwatchActivity extends Activity {
     private int seconds = 0;
     // хранит значение работает ли секундомер в настоящий момент = Флаг работы
     private boolean running;
+    // хранит информацию о том, работал ли секундомер перед вызовом метода onStop()
+    private boolean wasRunning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +26,7 @@ public class StopwatchActivity extends Activity {
         if (savedInstanceState != null) {
             seconds = savedInstanceState.getInt("seconds");
             running = savedInstanceState.getBoolean("running");
+            wasRunning = savedInstanceState.getBoolean("wasRunning");
         }
 
         runTimer();
@@ -49,6 +52,25 @@ public class StopwatchActivity extends Activity {
     protected void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putInt("seconds", seconds);
         savedInstanceState.putBoolean("running", running);
+        savedInstanceState.putBoolean("wasRunning", wasRunning);
+    }
+
+    // благодаря этому переопределению метода секундомер сделает паузу, пока активность будет невидима
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // сохраняем информацию о том, работал ли секундомер на момент вызова метода onStop()
+        wasRunning = running;
+        running = false;
+    }
+
+    // реализуем в этом методе продолжение работы секундомера, как только активность станет снова видима
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (wasRunning) {
+            running = true;
+        }
     }
 
     // чтобы обновить секундомер планируем многократное выполнение кода с использованием Handler
